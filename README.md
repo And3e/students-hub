@@ -33,3 +33,5 @@ Rendiamo l'apprendimento più piacevole, facciamolo insieme!
 
 Siamo sei studenti dell'Istituto Tecnico **ISIT Manzetti** (AO), Italia, _felici di imparare_ e crescere attraverso la `programmazione`.\
 Questo è un sito creato **specificamente** per gli studenti valdostani, e chissà, forse anche per tutta l'Italia 🇮🇹!
+
+[mantine]: https://mantine.dev/
