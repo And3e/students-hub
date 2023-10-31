@@ -1,110 +1,260 @@
-CREATE TABLE `institute` (
-  `id` INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255),
-  `grade` VARCHAR(255)
-);
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost
+-- Creato il: Ott 31, 2023 alle 21:00
+-- Versione del server: 10.4.28-MariaDB
+-- Versione PHP: 8.2.4
 
-CREATE TABLE `school_address` (
-  `id` INTEGER NOT NULL AUTO_INCREMENT,
-  `FKid_institute` INTEGER,
-  `name` VARCHAR(255),
-  PRIMARY KEY (`id`, `FKid_institute`),
-  FOREIGN KEY (`FKid_institute`) REFERENCES `institute` (`id`)
-);
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
-CREATE TABLE `class` (
-  `id` INTEGER NOT NULL AUTO_INCREMENT,
-  `FKid_school_address` INTEGER,
-  `year` INTEGER,
-  PRIMARY KEY (`id`, `FKid_school_address`),
-  FOREIGN KEY (`FKid_school_address`) REFERENCES `school_address` (`id`)
-);
 
-CREATE TABLE `subject` (
-  `id` INTEGER NOT NULL AUTO_INCREMENT,
-  `FKid_class` INTEGER,
-  `name` VARCHAR(255),
-  PRIMARY KEY (`id`, `FKid_class`),
-  FOREIGN KEY (`FKid_class`) REFERENCES `class` (`id`)
-);
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
-CREATE TABLE `user` (
-  `id` INTEGER NOT NULL AUTO_INCREMENT,
-  `FKid_institute` INTEGER,
-  `FKid_school_address` INTEGER,
-  `FKid_class` INTEGER,
-  `verificated` TINYINT(1),
-  `name` VARCHAR(255),
-  `surname` VARCHAR(255),
-  `birth_date` DATE,
-  `role` VARCHAR(255),
-  `class` VARCHAR(255),
-  PRIMARY KEY (`id`, `FKid_institute`, `FKid_school_address`, `FKid_class`),
-  FOREIGN KEY (`FKid_institute`) REFERENCES `institute` (`id`),
-  FOREIGN KEY (`FKid_school_address`) REFERENCES `school_address` (`id`),
-  FOREIGN KEY (`FKid_class`) REFERENCES `class` (`id`)
-);
+--
+-- Database: `studentVda`
+--
 
-CREATE TABLE `account` (
-  `FKid_user` INTEGER PRIMARY KEY,
-  `email` VARCHAR(255) NOT NULL,
-  `username` VARCHAR(255) NOT NULL,
-  `password` VARCHAR(255) NOT NULL,
-  `privilege` TINYINT(1) NOT NULL,
-  FOREIGN KEY (`FKid_user`) REFERENCES `user` (`id`)
-);
+-- --------------------------------------------------------
 
-CREATE TABLE `contacts` (
-  `FKid_user` INTEGER PRIMARY KEY,
-  `telephone` VARCHAR(255),
-  `instagram` VARCHAR(255),
-  `facebook` VARCHAR(255),
-  `github` VARCHAR(255),
-  FOREIGN KEY (`FKid_user`) REFERENCES `user` (`id`)
-);
+--
+-- Struttura della tabella `Address`
+--
 
-CREATE TABLE `note` (
-  `FKid_user` INTEGER PRIMARY KEY,
-  `title` VARCHAR(255),
-  `body` VARCHAR(255),
-  FOREIGN KEY (`FKid_user`) REFERENCES `user` (`id`)
-);
+CREATE TABLE `Address` (
+  `cod_address` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `position` varchar(255) NOT NULL,
+  `FKcod_institute` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE `resource` (
-  `id` INTEGER NOT NULL AUTO_INCREMENT,
-  `FKid_subject` INTEGER,
-  `FKid_user` INTEGER,
-  `preferred` TINYINT(1),
-  `filename` VARCHAR(255),
-  `description` VARCHAR(255),
-  PRIMARY KEY (`id`, `FKid_subject`, `FKid_user`),
-  FOREIGN KEY (`FKid_subject`) REFERENCES `subject` (`id`),
-  FOREIGN KEY (`FKid_user`) REFERENCES `user` (`id`)
-);
+--
+-- Dump dei dati per la tabella `Address`
+--
 
-CREATE TABLE `review` (
-  `FKid_resource` INTEGER,
-  `FKid_user` INTEGER,
-  `stars` INTEGER,
-  `title` VARCHAR(255),
-  `description` VARCHAR(255),
-  PRIMARY KEY (`FKid_resource`, `FKid_user`),
-  FOREIGN KEY (`FKid_resource`) REFERENCES `resource` (`id`),
-  FOREIGN KEY (`FKid_user`) REFERENCES `user` (`id`)
-);
+INSERT INTO `Address` (`cod_address`, `name`, `position`, `FKcod_institute`) VALUES
+(1, 'AGR.AGROAL.AGROIND. / PRODUZIONI E TRASFORMAZIONI', 'Regione la RochèRe 1/A', 2),
+(2, 'IEFP COMPLEMENTARE', 'Regione la RochèRe 1/A', 2),
+(3, 'INFORMATICA E TELECOMUNICAZIONI', 'Via J.B. Festaz 27/A', 1),
+(4, 'AMMINISTRAZIONE, FINANZA E MARKETING', 'Via J.B. Festaz 27/A', 1);
 
-CREATE TABLE `class_school_address` (
-  `class_FKid_school_address` INTEGER,
-  `school_address_id` INTEGER,
-  PRIMARY KEY (`class_FKid_school_address`, `school_address_id`),
-  FOREIGN KEY (`class_FKid_school_address`) REFERENCES `class` (`id`),
-  FOREIGN KEY (`school_address_id`) REFERENCES `school_address` (`id`)
-);
+-- --------------------------------------------------------
 
-CREATE TABLE `subject_class` (
-  `subject_FKid_class` INTEGER,
-  `class_id` INTEGER,
-  PRIMARY KEY (`subject_FKid_class`, `class_id`),
-  FOREIGN KEY (`subject_FKid_class`) REFERENCES `subject` (`id`),
-  FOREIGN KEY (`class_id`) REFERENCES `class` (`id`)
-);
+--
+-- Struttura della tabella `Classes`
+--
+
+CREATE TABLE `Classes` (
+  `cod_class` int(11) NOT NULL,
+  `year` int(11) NOT NULL,
+  `section` char(1) NOT NULL,
+  `FKcod_address` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `Classes`
+--
+
+INSERT INTO `Classes` (`cod_class`, `year`, `section`, `FKcod_address`) VALUES
+(1, 2, 'A', 1),
+(2, 4, 'B', 3);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ClassSubjects`
+--
+
+CREATE TABLE `ClassSubjects` (
+  `cod_classSubjects` int(11) NOT NULL,
+  `FKcod_class` int(11) DEFAULT NULL,
+  `FKcod_subject` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `ClassSubjects`
+--
+
+INSERT INTO `ClassSubjects` (`cod_classSubjects`, `FKcod_class`, `FKcod_subject`) VALUES
+(1, 1, 2),
+(2, 2, 1),
+(3, 2, 3),
+(4, 2, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `Institutes`
+--
+
+CREATE TABLE `Institutes` (
+  `cod_institute` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `sede` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `Institutes`
+--
+
+INSERT INTO `Institutes` (`cod_institute`, `name`, `sede`) VALUES
+(1, 'Innocent Manzetti', 'Via J.B. Festaz 27/A'),
+(2, 'Institut Agricole Régional', 'Regione la RochèRe 1/A');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `Notes`
+--
+
+CREATE TABLE `Notes` (
+  `cod_note` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `FKcod_user` int(11) NOT NULL,
+  `FKcod_classSubjects` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `Subjects`
+--
+
+CREATE TABLE `Subjects` (
+  `cod_subject` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `Subjects`
+--
+
+INSERT INTO `Subjects` (`cod_subject`, `name`) VALUES
+(1, 'Matematica'),
+(2, 'Francese'),
+(3, 'Italiano'),
+(4, 'Storia');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `Users`
+--
+
+CREATE TABLE `Users` (
+  `cod_user` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `surname` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `FKcod_class` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `Users`
+--
+
+INSERT INTO `Users` (`cod_user`, `name`, `surname`, `email`, `password`, `FKcod_class`) VALUES
+(1, 'John', 'Millet', 'sr.millet@mail.scuole.vda.it', 'CIAo', 1),
+(2, 'André ', 'Marguerettaz', 'sa.marguerettaz@mail.scuole.vda.it', 'And3e', 2);
+
+--
+-- Indici per le tabelle scaricate
+--
+
+--
+-- Indici per le tabelle `Address`
+--
+ALTER TABLE `Address`
+  ADD PRIMARY KEY (`cod_address`),
+  ADD KEY `5` (`FKcod_institute`);
+
+--
+-- Indici per le tabelle `Classes`
+--
+ALTER TABLE `Classes`
+  ADD PRIMARY KEY (`cod_class`),
+  ADD KEY `8` (`FKcod_address`);
+
+--
+-- Indici per le tabelle `ClassSubjects`
+--
+ALTER TABLE `ClassSubjects`
+  ADD PRIMARY KEY (`cod_classSubjects`),
+  ADD KEY `1` (`FKcod_class`),
+  ADD KEY `2` (`FKcod_subject`);
+
+--
+-- Indici per le tabelle `Institutes`
+--
+ALTER TABLE `Institutes`
+  ADD PRIMARY KEY (`cod_institute`);
+
+--
+-- Indici per le tabelle `Notes`
+--
+ALTER TABLE `Notes`
+  ADD PRIMARY KEY (`cod_note`),
+  ADD KEY `7` (`FKcod_user`),
+  ADD KEY `3` (`FKcod_classSubjects`);
+
+--
+-- Indici per le tabelle `Subjects`
+--
+ALTER TABLE `Subjects`
+  ADD PRIMARY KEY (`cod_subject`);
+
+--
+-- Indici per le tabelle `Users`
+--
+ALTER TABLE `Users`
+  ADD PRIMARY KEY (`cod_user`),
+  ADD KEY `6` (`FKcod_class`);
+
+--
+-- Limiti per le tabelle scaricate
+--
+
+--
+-- Limiti per la tabella `Address`
+--
+ALTER TABLE `Address`
+  ADD CONSTRAINT `5` FOREIGN KEY (`FKcod_institute`) REFERENCES `Institutes` (`cod_institute`);
+
+--
+-- Limiti per la tabella `Classes`
+--
+ALTER TABLE `Classes`
+  ADD CONSTRAINT `8` FOREIGN KEY (`FKcod_address`) REFERENCES `Address` (`cod_address`);
+
+--
+-- Limiti per la tabella `ClassSubjects`
+--
+ALTER TABLE `ClassSubjects`
+  ADD CONSTRAINT `1` FOREIGN KEY (`FKcod_class`) REFERENCES `Classes` (`cod_class`),
+  ADD CONSTRAINT `2` FOREIGN KEY (`FKcod_subject`) REFERENCES `Subjects` (`cod_subject`);
+
+--
+-- Limiti per la tabella `Notes`
+--
+ALTER TABLE `Notes`
+  ADD CONSTRAINT `3` FOREIGN KEY (`FKcod_classSubjects`) REFERENCES `ClassSubjects` (`cod_classSubjects`),
+  ADD CONSTRAINT `7` FOREIGN KEY (`FKcod_user`) REFERENCES `Users` (`cod_user`);
+
+--
+-- Limiti per la tabella `Users`
+--
+ALTER TABLE `Users`
+  ADD CONSTRAINT `6` FOREIGN KEY (`FKcod_class`) REFERENCES `Classes` (`cod_class`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
