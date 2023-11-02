@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Creato il: Ott 31, 2023 alle 21:00
+-- Creato il: Nov 02, 2023 alle 10:53
 -- Versione del server: 10.4.28-MariaDB
 -- Versione PHP: 8.2.4
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `studentVda`
+-- Database: `students_hub_db`
 --
 
 -- --------------------------------------------------------
@@ -54,6 +54,7 @@ CREATE TABLE `Classes` (
   `cod_class` int(11) NOT NULL,
   `year` int(11) NOT NULL,
   `section` char(1) NOT NULL,
+  `schoolyear` varchar(255) NOT NULL,
   `FKcod_address` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -61,9 +62,9 @@ CREATE TABLE `Classes` (
 -- Dump dei dati per la tabella `Classes`
 --
 
-INSERT INTO `Classes` (`cod_class`, `year`, `section`, `FKcod_address`) VALUES
-(1, 2, 'A', 1),
-(2, 4, 'B', 3);
+INSERT INTO `Classes` (`cod_class`, `year`, `section`, `schoolyear`, `FKcod_address`) VALUES
+(1, 2, 'A', '2023-2024', 1),
+(2, 4, 'B', '2021-2022', 3);
 
 -- --------------------------------------------------------
 
@@ -86,6 +87,19 @@ INSERT INTO `ClassSubjects` (`cod_classSubjects`, `FKcod_class`, `FKcod_subject`
 (2, 2, 1),
 (3, 2, 3),
 (4, 2, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `Comments`
+--
+
+CREATE TABLE `Comments` (
+  `cod_comment` int(11) NOT NULL,
+  `corp` varchar(255) NOT NULL,
+  `FKcod_user` int(11) NOT NULL,
+  `FKcod_note` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -119,6 +133,19 @@ CREATE TABLE `Notes` (
   `description` varchar(255) NOT NULL,
   `FKcod_user` int(11) NOT NULL,
   `FKcod_classSubjects` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `Reviews`
+--
+
+CREATE TABLE `Reviews` (
+  `cod_review` int(11) NOT NULL,
+  `vote` int(11) NOT NULL,
+  `FKcod_user` int(11) NOT NULL,
+  `FKcod_note` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -192,6 +219,14 @@ ALTER TABLE `ClassSubjects`
   ADD KEY `2` (`FKcod_subject`);
 
 --
+-- Indici per le tabelle `Comments`
+--
+ALTER TABLE `Comments`
+  ADD PRIMARY KEY (`cod_comment`),
+  ADD KEY `11` (`FKcod_note`),
+  ADD KEY `12` (`FKcod_user`);
+
+--
 -- Indici per le tabelle `Institutes`
 --
 ALTER TABLE `Institutes`
@@ -204,6 +239,14 @@ ALTER TABLE `Notes`
   ADD PRIMARY KEY (`cod_note`),
   ADD KEY `7` (`FKcod_user`),
   ADD KEY `3` (`FKcod_classSubjects`);
+
+--
+-- Indici per le tabelle `Reviews`
+--
+ALTER TABLE `Reviews`
+  ADD PRIMARY KEY (`cod_review`),
+  ADD KEY `13` (`FKcod_note`),
+  ADD KEY `14` (`FKcod_user`);
 
 --
 -- Indici per le tabelle `Subjects`
@@ -242,11 +285,25 @@ ALTER TABLE `ClassSubjects`
   ADD CONSTRAINT `2` FOREIGN KEY (`FKcod_subject`) REFERENCES `Subjects` (`cod_subject`);
 
 --
+-- Limiti per la tabella `Comments`
+--
+ALTER TABLE `Comments`
+  ADD CONSTRAINT `11` FOREIGN KEY (`FKcod_note`) REFERENCES `Notes` (`cod_note`),
+  ADD CONSTRAINT `12` FOREIGN KEY (`FKcod_user`) REFERENCES `Users` (`cod_user`);
+
+--
 -- Limiti per la tabella `Notes`
 --
 ALTER TABLE `Notes`
   ADD CONSTRAINT `3` FOREIGN KEY (`FKcod_classSubjects`) REFERENCES `ClassSubjects` (`cod_classSubjects`),
   ADD CONSTRAINT `7` FOREIGN KEY (`FKcod_user`) REFERENCES `Users` (`cod_user`);
+
+--
+-- Limiti per la tabella `Reviews`
+--
+ALTER TABLE `Reviews`
+  ADD CONSTRAINT `13` FOREIGN KEY (`FKcod_note`) REFERENCES `Notes` (`cod_note`),
+  ADD CONSTRAINT `14` FOREIGN KEY (`FKcod_user`) REFERENCES `Users` (`cod_user`);
 
 --
 -- Limiti per la tabella `Users`
